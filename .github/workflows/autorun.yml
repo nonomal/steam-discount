@@ -7,12 +7,15 @@ on:
     branches:
       - master
   schedule:
-    - cron: '0 * * * *'
+    - cron: '0 12 * * *'
 
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    # 当仓库隶属组织时，赋予流水线“写权限”以便提交变更
+    permissions:
+      contents: write
     
     steps:
       - name: Check out repo
@@ -36,7 +39,7 @@ jobs:
 
       - name: Crawl Steam Discount
         run: |-
-          python main.py -p ${{ secrets.PAGES }} -z ${{ secrets.ZONE }} -f ${{ secrets.FILTER }} -l ${{ secrets.LIMIT }} -s
+          python main.py -g "${{ secrets.CRAWL_PWD }}" -p ${{ secrets.PAGES }} -z ${{ secrets.ZONE }} -f ${{ secrets.FILTER }} -l ${{ secrets.LIMIT }} -s
 
 
       # 如果不希望污染 commit 记录，user.email 和 user.name 随便填即可
